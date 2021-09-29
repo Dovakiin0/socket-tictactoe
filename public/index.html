@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" type="text/css" href="./styles.css" />
+	<title>Tic Tac</title>
+</head>
+
+<body>
+	<div class="container">
+		<!-- intial screen -->
+		<div class="initial-screen">
+			<div class="header">
+				<h1>Tic Tac Toe</h1>
+			</div>
+			<div class="login">
+				<div class="username">
+					<h4>Enter Username:</h4>
+					<input class="username-txt" type="text" />
+          </div>
+          <button class="create-btn" type="button">Create Game</button>
+          <h5>OR</h5>
+          <div class="join">
+            <h4>Enter Code:</h4>
+            <input class="code-txt" type="text" />
+          </div>
+          <button class="join-btn" type="button">Join Game</button>
+        </div>
+      </div>
+      <!-- game screen -->
+      <div class="game-screen">
+	<table>
+		<tr>
+			<td class="cell" id="0"></td>
+			<td class="cell" id="1"></td>
+			<td class="cell" id="2"></td>
+		</tr>
+		<tr>
+			<td class="cell" id="3"></td>
+			<td class="cell" id="4"></td>
+			<td class="cell" id="5"></td>
+		</tr>
+		<tr>
+			<td class="cell" id="6"></td>
+			<td class="cell" id="7"></td>
+			<td class="cell" id="8"></td>
+		</tr>
+	</table>
+  <div class="game-content">
+
+  <h1>Tic Tac Toe</h1>
+  <div class="connected">
+    <h2>Room Code: <span class="display-code"></span></h2>
+    <h2>Connected Players: </h2>
+    <div class="connected-players"></div>
+  </div>
+  </div>
+      </div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="index.js"></script>
+  </body>
+</html>
