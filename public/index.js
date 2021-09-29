@@ -20,8 +20,6 @@ var code = document.querySelector(".code-txt");
 var createBtn = document.querySelector(".create-btn");
 var joinBtn = document.querySelector(".join-btn");
 
-var player1_name = document.querySelector(".player1-name");
-var player2_name = document.querySelector(".player2-name");
 let cells = document.querySelectorAll("td")
 var current_room
 
@@ -56,11 +54,12 @@ function handleGameCode(code) {
 function handleGameOver(data) {
   if (!gameActive) return;
   data = JSON.parse(data);
+  var players = document.querySelectorAll(".connected-players h2")
   gameActive = false;
-  if (data.winner === playerNumber) {
-    alert("You Win!");
+  if (data.winner === current_player-1) {
+    alert(`You Win!`);
   } else {
-    alert("You Lose!");
+    alert(`${players[data.winner].innerText} has Won!`);
   }
 
 }
@@ -69,9 +68,9 @@ function handlePlayerJoin(users) {
   const connected_users = document.querySelector(".connected-players");
   connected_users.innerHTML = "";
   for (let user of users) {
-      var el = document.createElement("h2");
-      el.innerText = user.username;
-      connected_users.appendChild(el);
+    var el = document.createElement("h2");
+    el.innerText = user.username;
+    connected_users.appendChild(el);
   }
 }
 
@@ -109,7 +108,6 @@ function joinGame() {
 
 cells.forEach((val) => {
   val.addEventListener("click", () => {
-
     socket.emit("cellUpdated", { id: val.id, turn: player_turn });
   })
 })

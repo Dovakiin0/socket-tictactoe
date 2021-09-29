@@ -66,9 +66,9 @@ io.on("connection", (socket) => {
   function handleCellUpdated(playerDetails) {
     let roomName = clientRooms[socket.id];
     const { id, turn } = playerDetails;
+    state[roomName].board[id] = player[turn];
     const winner = check_winner(state[roomName], { id, turn });
-    if (!winner) {
-      state[roomName].board[id] = turn;
+    if (typeof winner !== "number") {
       io.sockets.in(roomName).emit("gameState", JSON.stringify({state, id}));
     }else{
       io.sockets.in(roomName).emit("gameOver", JSON.stringify({ winner }));
@@ -81,7 +81,6 @@ function check_winner(state, { id, turn }) {
     (e === player[turn]) ? a.concat(i) : a, []);
   for (let [index, win] of state.winner_combo.entries()) {
     if (win.every(elem => plays.indexOf(elem) > -1)) {
-      console.log("win");
       return turn;
     }
   }
