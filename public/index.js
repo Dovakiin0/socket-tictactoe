@@ -7,6 +7,7 @@ socket.on("gameCode", handleGameCode);
 socket.on("unknownCode", handleUnknownCode);
 socket.on("tooManyPlayers", handleTooManyPlayers);
 socket.on("playerJoined", handlePlayerJoin);
+socket.on("restarted", handleRestart);
 
 var initial_screen = document.querySelector(".initial-screen");
 var game_screen = document.querySelector(".game-screen");
@@ -19,6 +20,7 @@ var room_code = document.querySelector(".display-code");
 var code = document.querySelector(".code-txt");
 var createBtn = document.querySelector(".create-btn");
 var joinBtn = document.querySelector(".join-btn");
+var restartBtn = document.querySelector(".restart-btn");
 var whose_turn = document.querySelector(".turn");
 
 let cells = document.querySelectorAll("td")
@@ -36,12 +38,25 @@ var game_active = false;
 
 createBtn.addEventListener("click", newGame);
 joinBtn.addEventListener("click", joinGame);
+restartBtn.addEventListener("click", restartGame);
 
 function init() {
   initial_screen.style.display = "none";
   game_screen.style.display = "flex";
   game_active = true;
+  restartBtn.style.display = "none";
   update_turn_text();
+}
+
+function restartGame(){
+  socket.emit("restart", {current_player})
+}
+
+function handleRestart(){
+  cells.forEach((val)=>{
+    val.innerText = "";
+  })
+  init();
 }
 
 function handleInit(number) {
@@ -65,6 +80,7 @@ function handleGameOver(data) {
   } else {
     alert(`${current_users[data.winner].username} has Won!`);
   }
+  restartBtn.style.display = "block";
 }
 
 function handlePlayerJoin(users) {
@@ -93,9 +109,6 @@ function reset() {
   game_screen.style.display = "none";
 }
 
-function reset_game(){
-  
-}
 
 function newGame() {
   if (!username) return alert("Enter Username")

@@ -21,6 +21,13 @@ io.on("connection", (socket) => {
   socket.on("newGame", handleNewGame);
   socket.on("cellUpdated", handleCellUpdated);
   socket.on("playerJoin", handlePlayerJoin);
+  socket.on("restart", handleRestart);
+
+  function handleRestart(){
+    let roomName = clientRooms[socket.id];
+    state[roomName] = initGame();
+    io.sockets.in(roomName).emit("restarted");
+  }
 
   function handlePlayerJoin(name){
     let roomName = clientRooms[socket.id];
