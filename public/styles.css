@@ -27,6 +27,10 @@ body {
   height: 100vh;
 }
 
+.display-code {
+  color: red
+}
+
 .header {
   padding: 5px;
 }
@@ -103,4 +107,18 @@ table tr td:first-child {
 
 table tr td:last-child {
 	border-right: 0;
+}
+
+.turn {
+  margin-top: 15px;
+}
+
+@media only screen and (max-width: 600px) {
+  .game-screen {
+    flex-direction: column;
+  }
+
+  .game-content{
+    margin-top: 30px;
+  }
 }

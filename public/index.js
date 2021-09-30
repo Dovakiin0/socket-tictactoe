@@ -19,14 +19,16 @@ var room_code = document.querySelector(".display-code");
 var code = document.querySelector(".code-txt");
 var createBtn = document.querySelector(".create-btn");
 var joinBtn = document.querySelector(".join-btn");
+var whose_turn = document.querySelector(".turn");
 
 let cells = document.querySelectorAll("td")
-var current_room
 
 const player = {
   0: "O",
   1: "X"
 };
+
+var current_users
 
 let player_turn = 0;
 var current_player;
@@ -38,8 +40,8 @@ joinBtn.addEventListener("click", joinGame);
 function init() {
   initial_screen.style.display = "none";
   game_screen.style.display = "flex";
-
-  gameActive = true;
+  game_active = true;
+  update_turn_text();
 }
 
 function handleInit(number) {
@@ -48,27 +50,29 @@ function handleInit(number) {
 
 function handleGameCode(code) {
   room_code.innerText = code;
-  current_room = code
 }
 
 function handleGameOver(data) {
-  if (!gameActive) return;
+  if (!game_active) return;
   data = JSON.parse(data);
-  var players = document.querySelectorAll(".connected-players h2")
-  gameActive = false;
-  if (data.winner === current_player-1) {
+  var players = document.querySelectorAll(".connected-players h3")
+  game_active = false;
+  if (data.winner === 3) {
+    alert("Game Draw!");
+  }
+  else if (data.winner === current_player - 1) {
     alert(`You Win!`);
   } else {
-    alert(`${players[data.winner].innerText} has Won!`);
+    alert(`${current_users[data.winner].username} has Won!`);
   }
-
 }
 
 function handlePlayerJoin(users) {
   const connected_users = document.querySelector(".connected-players");
   connected_users.innerHTML = "";
+  current_users = users;
   for (let user of users) {
-    var el = document.createElement("h2");
+    var el = document.createElement("h3");
     el.innerText = user.username;
     connected_users.appendChild(el);
   }
@@ -89,6 +93,9 @@ function reset() {
   game_screen.style.display = "none";
 }
 
+function reset_game(){
+  
+}
 
 function newGame() {
   if (!username) return alert("Enter Username")
@@ -108,12 +115,14 @@ function joinGame() {
 
 cells.forEach((val) => {
   val.addEventListener("click", () => {
-    socket.emit("cellUpdated", { id: val.id, turn: player_turn });
+    if (player_turn + 1 === current_player) {
+      socket.emit("cellUpdated", { id: val.id, turn: player_turn });
+    }
   })
 })
 
 function handleGameState(gameState) {
-  if (!gameActive) return;
+  if (!game_active) return;
   gameState = JSON.parse(gameState);
   update_cell(gameState.id, gameState.state);
 }
@@ -123,7 +132,20 @@ function update_cell(id, state) {
   if (valid) {
     cells[id].innerText = player[player_turn];
     player_turn === 0 ? player_turn = 1 : player_turn = 0;
+    update_turn_text();
   }
+}
+
+function update_turn_text(){
+  if (player_turn + 1 === current_player) {
+      whose_turn.innerText = "Your Turn";
+    }else{
+      if(current_player === 1){
+        whose_turn.innerText = `${current_users[1].username}'s Turn'`
+      }else{
+        whose_turn.innerText = `${current_users[0].username}'s Turn'`
+      }
+    }
 }
 
 function check_valid_moves(id) {

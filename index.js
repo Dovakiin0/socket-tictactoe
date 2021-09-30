@@ -14,7 +14,6 @@ const player = {
   1: "X"
 };
 
-
 app.use(express.static(path.join(__dirname, "public")));
 
 io.on("connection", (socket) => {
@@ -67,6 +66,7 @@ io.on("connection", (socket) => {
     let roomName = clientRooms[socket.id];
     const { id, turn } = playerDetails;
     state[roomName].board[id] = player[turn];
+    state[roomName].moves += 1;
     const winner = check_winner(state[roomName], { id, turn });
     if (typeof winner !== "number") {
       io.sockets.in(roomName).emit("gameState", JSON.stringify({state, id}));
@@ -83,6 +83,9 @@ function check_winner(state, { id, turn }) {
     if (win.every(elem => plays.indexOf(elem) > -1)) {
       return turn;
     }
+  }
+  if(state.moves === 9){
+    return 3;
   }
   return false;
 }

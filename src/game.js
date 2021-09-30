@@ -26,6 +26,7 @@ function roomUsers(room){
 function createGameState() {
   return {
     board : Array.from(Array(9).keys()),
+    moves: 0,
     winner_combo: [
       [0, 1, 2],
       [3, 4, 5],
